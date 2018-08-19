@@ -3,10 +3,11 @@ require 'openssl'
 
 module RestClient
   def self.ssl_settings
-    {
-      :verify_ssl => OpenSSL::SSL::VERIFY_PEER,
-      # :ssl_ca_file => File.join(File.dirname(__FILE__), 'cert')
-    }
+    options = { :verify_ssl => OpenSSL::SSL::VERIFY_PEER }
+    if ENV['REST_CLIENT_CERT_FILE_PATH'].present?
+      options[:ssl_ca_file] = ENV['REST_CLIENT_CERT_FILE_PATH']
+    end
+    options
   end
 
   def self.get(url, headers={}, &block)
